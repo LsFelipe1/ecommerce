@@ -27,6 +27,13 @@ const burgers = [
         price: '10.00',
         image: './imagens/hamb-4.png'
     },
+    {
+        id: 5,
+        name: "X-tudo",
+        description: "Pão brioche com hamburguer duplo com cheddar, alface, tomate, bacon e molho do casa",
+        price: '15.90',
+        image: './imagens/hamb-5.png'
+    },
 ]
 
 export default burgers

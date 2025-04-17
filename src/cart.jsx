@@ -13,10 +13,10 @@ const Cart = () => {
 
     return (
     <>
-    <div className="flex flex-col">
+    <div className="flex text-center bg-amber-300 fixed right-0 flex-col w-85 h-500">
     <ShoppingBasket />
-    <BurgerList addToCart={addToCart} />
     <AddOnCart cart={cart} setCart={setCart}/>
+    <h2 className="text-2xl flex justify-between">Total: $500</h2>
     </div>
     </>
     )

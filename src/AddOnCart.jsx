@@ -1,9 +1,9 @@
 const AddOnCart = ({ cart }) => {
     return (
         <>
-            <h1>Itens no carrinho</h1>
+            <h1 className="text-3xl text-white font-bold">Itens no carrinho</h1>
             {cart.length === 0 ? (
-                <p>Seu carrinho está vazio.</p>
+                <p className="my-70 font-extrabold text-4xl">Seu carrinho está vazio.</p>
             ) : (
                 <div>
                     {cart.map((burger) => (
