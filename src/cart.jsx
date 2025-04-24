@@ -1,58 +1,114 @@
-import { CircleMinus, CirclePlus, ShoppingBasket, Trash2, TrashIcon } from "lucide-react";
+import {
+  ChevronLast,
+  CircleMinus,
+  CirclePlus,
+  ShoppingBasket,
+  Trash2,
+} from "lucide-react";
 import { useState } from "react";
 import React from "react";
+import Notify from "../public/notify";
 
-function Cart ({ cart }) {
+function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
+  const [expanded, setExpanded] = useState(true);
 
-    return (
+  return (
     <>
-    <div className="flex p-2 rounded-tl-2xl text-center overflow-auto bg-gray-200 border-2 border-red-300 fixed right-0 flex-col w-115 h-500">
-    <button className="bg-gray-400 cursor-pointer max-w-fit p-2 rounded-xl">
-        <ShoppingBasket className="scale-120" />
+      <div
+        className={`flex p-2 rounded-tl-2xl text-center overflow-auto bg-gray-100 border-2 fixed right-0 flex-col transition-all ${
+          expanded
+            ? "w-115 h-500"
+            : "overflow-hidden w-15 h-25 bg-transparent border-none"
+        }`}
+      >
+        <button
+          onClick={() => setExpanded((curr) => !curr)}
+          className="relative bg-gray-400 cursor-pointer max-w-fit flex flex-col-reverse p-2 max-h-fit rounded-xl text-white transition duration-500 hover:scale-110 hover:bg-gray-100 hover:text-black hover:border hover:border-black"
+        >
+          {expanded ? <ChevronLast /> : <ShoppingBasket />}
+          {/* Notificação posicionada no canto superior direito */}
+          {!expanded && <Notify cart={cart} />}
         </button>
-    <h2 className="font-bold text-2xl">Carrinho</h2>
-    {cart.length === 0 ? (
-        <p className="font-extrabold">O carrinho está vazio.</p>
-    ) : (<ul>
-        {cart.map((burger) => (
-            <div className="flex justify-start items-center gap-2 my-3 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 trasition duration-350 ease-in-out">
-                <img className="rounded-sm max-w-40 max-h-40" src={burger.image} alt={burger.name} />
-                <li className="my-6" key={burger.id}>
-                    <div>
-                    <div className="grow">
-                        <div className="flex justify-between font-bold"> {/*Tittle & Price*/}
-                        <h1>{burger.name}</h1>
-                        <p>R${(burger.price * burger.quantity).toFixed(2)}</p>
-                        </div>
-
-                        <div className="text-start my-2.5"> {/*Description*/}
+        <div className={`${expanded ? "" : "hidden"}`}>
+          <h2 className="font-bold text-2xl">Carrinho</h2>
+          {cart.length === 0 ? (
+            <p className="font-extrabold">O carrinho está vazio.</p>
+          ) : (
+            <ul>
+              <div className="overflow-y-scroll overflow-x-hidden max-h-140 hover:bg-gray-300">
+                {cart.map((burger) => (
+                  <div className="flex justify-start items-center gap-2 my-3 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 hover:scale-102 trasition duration-350 ease-in-out">
+                    <img
+                      className="rounded-sm max-w-40 max-h-40"
+                      src={burger.image}
+                      alt={burger.name}
+                    />
+                    <li className="my-6" key={burger.id}>
+                      <div>
+                        <div className="grow">
+                          <div className="flex justify-between font-bold">
+                            {" "}
+                            {/*título & Preço*/}
+                            <h1>{burger.name}</h1>
+                            <p>
+                              R${(burger.price * burger.quantity).toFixed(2)}
+                            </p>
+                          </div>
+                          <div className="text-start my-2.5">
+                            {" "}
+                            {/*descrição*/}
                             <p>{burger.description}</p>
-                        </div>
-                        <div  className="flex justify-between"> {/*Quantity & delete*/}
+                          </div>
+                          <div className="flex justify-between">
+                            {" "}
+                            {/*alterar quantidade & deletar*/}
                             <div className="flex gap-2">
-                                <CircleMinus className="hover:scale-110" />
-                                <span className="font-semibold">{burger.quantity}</span>
-                                <CirclePlus className="hover:scale-110" />
+                              <CircleMinus
+                                onClick={() => decreaseItem(burger.id)}
+                                className="hover:scale-110"
+                              />
+                              <span className="font-semibold">
+                                {burger.quantity}
+                              </span>
+                              <CirclePlus
+                                onClick={() => incrementItem(burger.id)}
+                                className="hover:scale-110"
+                              />
                             </div>
-                            <Trash2 className="text-black hover:scale-110 hover:text-red-500" />
+                            <Trash2
+                              onClick={() => removeFromCart(burger.id)}
+                              className="text-black hover:scale-110 hover:text-red-500"
+                            />
+                          </div>
                         </div>
-                    </div>
-                    </div>
-                </li>
-                </div>
-            ))}
-        <li className="my-20">
-            <span className="font-extrabold text-2xl">Total: </span>
-            <span className="font-bold text-2xl">
-                R$ {cart.reduce((sum, item) => sum + item.price * item.quantity, 0)
-                .toFixed(2)}
-            </span>
-        </li>
-        <button className="bg-green-500 text-amber-50 font-bold text-xl border-2 border-gray-500 hover:bg-emerald-600 p-5 rounded-3xl transition duration-300 ease-in-out">Finalizar Pagamento</button>
-    </ul>)}
-    </div>
+                      </div>
+                    </li>
+                  </div>
+                ))}
+              </div>
+              <li className="my-20">
+                {/*faz o calculo do preço dos itens*/}
+                <span className="font-extrabold text-2xl">Total: </span>
+                <span className="font-bold text-2xl">
+                  R${" "}
+                  {cart
+                    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+                    .toFixed(2)}
+                </span>
+              </li>
+              <a
+                href="/payout"
+                className="bg-green-500 text-amber-50 font-bold text-xl border-2 border-gray-500 hover:bg-emerald-600 p-5 rounded-3xl transition duration-300 ease-in-out"
+              >
+                Finalizar Pedido
+              </a>
+              {/*link que leva à página de pagamento*/}
+            </ul>
+          )}
+        </div>
+      </div>
     </>
-    );
-};
+  );
+}
 
-export default Cart
+export default Cart;
