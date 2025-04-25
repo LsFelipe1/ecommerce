@@ -79,7 +79,7 @@ function App() {
           decreaseItem={(id) => decreaseItem(id, setCart)}
         />
       </nav>
-      <div className="flex justify-center flex-col items-center m-auto w-screen h-104 bg-[url(../imagens/bg.png)] text-white">
+      <div className="flex justify-center flex-col items-center w-screen h-104 bg-[url(../imagens/bg.png)] text-white">
         <h1 className="font-extrabold my-10 text-xl">Hamburgui</h1>
         <p>Rua TakakinaVara, 87, Centro</p>
         <IsStoreOpen />

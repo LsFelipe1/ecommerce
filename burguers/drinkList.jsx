@@ -1,32 +1,34 @@
 import React from "react";
-import drink from "./drink";
+import drinks from "./drink";
 import { ShoppingCart } from "lucide-react";
 
-//função para exibir as bebidas na página através de um array onde os itens são inseridos de forma "automática"
-function DrinkList({ addToCart }) {
+//função para exibir os hambúrgues na página através de um array onde os itens são inseridos de forma "automática"
+function drinkList({ addToCart }) {
   return (
-    <div className="grid grid-cols-2 gap-6 px-50">
-      {drink.map((drink /*busca os itens no array*/) => (
+    <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-6 container mx-auto px-4 xs:px-6 sm:px-8">
+      {drinks.map((drink /*busca os itens no array*/) => (
         <div
-          className="flex items-center gap-5 md:font-mono bg-white min-w-70 flex-row rounded-xl my-4 shadow-sm"
+          className="flex items-center flex-col sm:flex-row gap-5 font-mono bg-white w-full min-h-fit max-h-80 rounded-xl my-4 p-2 shadow-sm"
           key={drink.id}
         >
           {" "}
           {/*cada div possui uma chave igual ao id do item*/}
           <div>
             <img
-              className="rounded-2xl max-w-70 max-h-40"
+              className="rounded-2xl h-40 xs:h-48 sm:h-56 object-cover"
               src={drink.image}
               alt={drink.name}
             />
           </div>
-          <div className="">
-            <h2 className="font-extrabold text-2xl my-6">{drink.name}</h2>
-            <p>{drink.description}</p>
-            <div className="flex justify-between w-135 items-center">
-              <p className="font-semibold my-5">R${drink.price}</p>
+          <div className="flex-1 mt-4 sm:mt-0 sm:ml-6">
+            <h2 className="font-extrabold text-base xl:text-2xl xl:my-6">
+              {drink.name}
+            </h2>
+            <p className="text-base">{drink.description}</p>
+            <div className="flex justify-between items-center xm:justify-end">
+              <p className="font-semibold xl:my-5">R${drink.price}</p>
               <button
-                className="flex max-h-8 bg-black py-1 px-4 rounded-2xl cursor-pointer text-white shadow-2xl transition-all duration-500 ease-in-out hover:bg-gray-300 hover:scale-120 hover:text-black "
+                className="flex max-h-8 bg-black py-1 px-4 rounded-2xl cursor-pointer text-white shadow-2xl transition duration-500 ease-in-out hover:bg-gray-300 hover:scale-120 hover:text-black "
                 onClick={() => addToCart(drink)}
               >
                 <ShoppingCart />
@@ -39,4 +41,4 @@ function DrinkList({ addToCart }) {
   );
 }
 
-export default DrinkList;
+export default drinkList;

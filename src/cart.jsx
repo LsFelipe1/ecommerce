@@ -15,9 +15,9 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
   return (
     <>
       <div
-        className={`flex p-2 rounded-tl-2xl text-center overflow-auto bg-gray-100 border-2 fixed right-0 flex-col transition-all ${
+        className={`flex p-2 rounded-tl-2xl text-center overflow-auto opacity-97 border-2 fixed right-0 flex-col transition-all duration-400 ${
           expanded
-            ? "w-115 h-500"
+            ? "w-80 h-205 xl:w-115 md:h-500 bg-zinc-300 md:bg-zinc-100"
             : "overflow-hidden w-15 h-25 bg-transparent border-none"
         }`}
       >
@@ -35,9 +35,9 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
             <p className="font-extrabold">O carrinho está vazio.</p>
           ) : (
             <ul>
-              <div className="overflow-y-scroll overflow-x-hidden max-h-140 hover:bg-gray-300">
+              <div className="overflow-y-scroll overflow-x-hidden max-h-110">
                 {cart.map((burger) => (
-                  <div className="flex justify-start items-center gap-2 my-3 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 hover:scale-102 trasition duration-350 ease-in-out">
+                  <div className="flex flex-col md:flex-row justify-start items-center gap-2 my-3 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 hover:scale-102 trasition duration-350 ease-in-out">
                     <img
                       className="rounded-sm max-w-40 max-h-40"
                       src={burger.image}
@@ -98,7 +98,7 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
               </li>
               <a
                 href="/payout"
-                className="bg-green-500 text-amber-50 font-bold text-xl border-2 border-gray-500 hover:bg-emerald-600 p-5 rounded-3xl transition duration-300 ease-in-out"
+                className="bg-green-500 text-amber-50 font-bold text-base xl:text-xl border-2 border-gray-500 hover:bg-emerald-600 p-2 xl:p-5 rounded-xl xl:rounded-3xl transition duration-300 ease-in-out"
               >
                 Finalizar Pedido
               </a>
