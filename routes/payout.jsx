@@ -1,35 +1,76 @@
-import Cart from "../src/cart";
-import App from "../src/App";
+import Step from "../src/payoutSrc/stepper";
+import { ChevronLeft } from "lucide-react";
+import { Outlet, useLocation } from "react-router-dom";
 
 function Payout() {
+  const location = useLocation();
+
+  let steps = [
+    {
+      name: "Detalhes da entrega",
+      route: "/payout/delivery",
+      status: "off",
+    },
+    {
+      name: "Informações do cartão",
+      route: "/payout/card-info",
+      status: "off",
+    },
+    { name: "Resumo do pedido", route: "/payout/summary", status: "off" },
+    {
+      name: "Finalização do pagamento",
+      route: "/payout/payment",
+      status: "off",
+    },
+    { name: "Acompanhe a entrega", route: "/payout/tracking", status: "off" },
+  ];
+
+  // Determina o índice da etapa atual com base na rota
+  const activeStepIndex = steps.findIndex(
+    (step) => step.route === location.pathname
+  );
+
+  // Atualiza o status de cada etapa com base no activeStepIndex
+  const updatedSteps = steps.map((step, index) => ({
+    ...step,
+    status:
+      index <= activeStepIndex // Etapas até a atual (inclusive) são "active"
+        ? "active"
+        : "off", // Etapas futuras são "off"
+  }));
+
   return (
     <>
-      <div className="">
-        <h1>Payout Sys</h1>
-        <h2 className="font-extrabold text-4xl">Endereço de entrega</h2>
-        <div className="grid grid-cols-2 p-6 gap-5 border-2">
-          <p>
-            Rua:
-            <input type="text" placeholder="Digite algo" />{" "}
-          </p>
-          <p>
-            Bairro:
-            <input type="text" placeholder="Digite algo" />{" "}
-          </p>
-          <p>
-            Complemento:
-            <input type="text" placeholder="Digite algo" />
-          </p>
-          <p>
-            Ponto de referência:
-            <input type="text" placeholder="Digite algo" />{" "}
-          </p>
-        </div>
-        <h2 className="my-10">Forma de pagamento</h2>
-        <div>
-          <h3>Pix</h3> <input type="radio" />
-          <h3>Cartão</h3> <input type="radio" />
-          <h3>No local</h3> <input type="radio" />
+      <title>Payout</title>
+      <div className="flex md:justify-center md:items-center bg-amber-50 md:w-screen h-screen">
+        <div className="flex flex-col xl:flex-row md:h-180 shadow-2xl bg-transparent rounded-2xl">
+          <div className="flex flex-col justify-center bg-emerald-50 pr-15 pl-15 space-y-3 rounded-s-2xl">
+            <a
+              href="/"
+              className="pointer xl:absolute top-35 hover:scale-130 transition-all duration-700"
+            >
+              <ChevronLeft />
+            </a>
+            {updatedSteps.map((step, index) => (
+              <Step
+                key={index}
+                name={step.name}
+                step={step.status}
+                index={index}
+                totalSteps={steps.length}
+                activeStepIndex={activeStepIndex}
+              />
+            ))}
+          </div>
+          <main className="flex flex-col md:justify-between bg-zinc-100 w-screen md:w-200 rounded-e-2xl p-5">
+            <Outlet />
+            <a
+              href="card-info"
+              className="flex self-end bg-emerald-300 w-fit p-2 shadow-xl font-bold rounded-sm hover:text-white hover:scale-105 hover:bg-emerald-500 transition-all duration-500"
+            >
+              Avançar
+            </a>
+          </main>
         </div>
       </div>
     </>

@@ -97,7 +97,7 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
                 </span>
               </li>
               <a
-                href="/payout"
+                href="/payout/delivery"
                 className="bg-green-500 text-amber-50 font-bold text-base xl:text-xl border-2 border-gray-500 hover:bg-emerald-600 p-2 xl:p-5 rounded-xl xl:rounded-3xl transition duration-300 ease-in-out"
               >
                 Finalizar Pedido

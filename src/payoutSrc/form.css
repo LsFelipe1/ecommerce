@@ -1,0 +1,5 @@
+.form__input:not(:placeholder-shown) ~ label {
+  top: -0.5em;
+  font-size: 0.75rem;
+  padding: 0 0.125em;
+}
