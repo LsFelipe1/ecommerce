@@ -7,6 +7,9 @@ import Payout from "../routes/payout.jsx";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import DeliveryForm from "../routes/streetForm.jsx";
 import CreditCard from "../routes/creditCard.jsx";
+import Summary from "../routes/summary.jsx";
+import Payment from "../routes/payment.jsx";
+import Tracking from "../routes/tracking.jsx";
 
 //configuração das rotas por meio do React-Router
 const router = createBrowserRouter([
@@ -28,15 +31,15 @@ const router = createBrowserRouter([
       },
       {
         path: "summary",
-        element: <DeliveryForm />,
+        element: <Summary />,
       },
       {
         path: "payment",
-        element: <DeliveryForm />,
+        element: <Payment />,
       },
       {
         path: "tracking",
-        element: <DeliveryForm />,
+        element: <Tracking />,
       },
     ],
   },

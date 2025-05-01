@@ -1,6 +1,7 @@
 import Step from "../src/payoutSrc/stepper";
 import { ChevronLeft } from "lucide-react";
 import { Outlet, useLocation } from "react-router-dom";
+import PayoutNavigation from "../src/payoutSrc/payoutRoutes";
 
 function Payout() {
   const location = useLocation();
@@ -34,7 +35,7 @@ function Payout() {
   const updatedSteps = steps.map((step, index) => ({
     ...step,
     status:
-      index <= activeStepIndex // Etapas até a atual (inclusive) são "active"
+      index <= activeStepIndex // Etapas até a atual são "active"
         ? "active"
         : "off", // Etapas futuras são "off"
   }));
@@ -64,12 +65,7 @@ function Payout() {
           </div>
           <main className="flex flex-col md:justify-between bg-zinc-100 w-screen md:w-200 rounded-e-2xl p-5">
             <Outlet />
-            <a
-              href="card-info"
-              className="flex self-end bg-emerald-300 w-fit p-2 shadow-xl font-bold rounded-sm hover:text-white hover:scale-105 hover:bg-emerald-500 transition-all duration-500"
-            >
-              Avançar
-            </a>
+            <PayoutNavigation />
           </main>
         </div>
       </div>

@@ -5,12 +5,30 @@ import {
   ShoppingBasket,
   Trash2,
 } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import React from "react";
 import Notify from "../public/notify";
+import { Link } from "react-router-dom";
 
 function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
   const [expanded, setExpanded] = useState(true);
+
+  //calcula o total do carrinho
+  const total = cart
+    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+    .toFixed(2);
+
+  //salva o carrinho e o total no sessionStorage quando o carrinho é atualizado
+  useEffect(() => {
+    if (cart.length > 0) {
+      sessionStorage.setItem("cart", JSON.stringify(cart));
+      sessionStorage.setItem("total", total);
+    } else {
+      // remove o carrinho e o total do sessionStorage se o carrinho estiver vazio
+      sessionStorage.removeItem("cart");
+      sessionStorage.removeItem("total");
+    }
+  }, [cart, total]);
 
   return (
     <>
@@ -96,12 +114,18 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
                     .toFixed(2)}
                 </span>
               </li>
-              <a
-                href="/payout/delivery"
+              <Link
+                to="/payout/delivery"
+                state={{
+                  cart,
+                  total: cart
+                    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+                    .toFixed(2),
+                }} //passa o carrinho para a próxima página
                 className="bg-green-500 text-amber-50 font-bold text-base xl:text-xl border-2 border-gray-500 hover:bg-emerald-600 p-2 xl:p-5 rounded-xl xl:rounded-3xl transition duration-300 ease-in-out"
               >
                 Finalizar Pedido
-              </a>
+              </Link>
               {/*link que leva à página de pagamento*/}
             </ul>
           )}
