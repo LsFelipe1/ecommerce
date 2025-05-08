@@ -80,8 +80,8 @@ function App() {
         />
       </nav>
       <div className="flex justify-center flex-col items-center w-screen h-104 bg-[url(../imagens/bg.png)] text-white">
-        <h1 className="font-extrabold my-10 text-xl">Hamburgui</h1>
-        <p>Rua TakakinaVara, 87, Centro</p>
+        <h1 className="font-extrabold my-10 text-xl">Burguer Bonanza</h1>
+        <p>Rua das Acácias, 123</p>
         <IsStoreOpen />
       </div>
       <div className="flex flex-col items-center justify-center w-screen my-10">

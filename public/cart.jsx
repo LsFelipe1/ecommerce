@@ -7,11 +7,13 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import React from "react";
-import Notify from "../public/notify";
+import Notify from "./notify";
 import { Link } from "react-router-dom";
+import { useStoreOpen } from "./openTime";
 
 function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
   const [expanded, setExpanded] = useState(true);
+  const isOpen = useStoreOpen(); //verifica se a loja está aberta ou fechada
 
   //calcula o total do carrinho
   const total = cart
@@ -30,12 +32,19 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
     }
   }, [cart, total]);
 
+  const handleLinkClick = (e) => {
+    if (!isOpen) {
+      e.preventDefault(); // impede a navegação se a loja estiver fechada
+      alert("A loja está fechada no momento. Tente novamente mais tarde.");
+    }
+  };
+
   return (
     <>
       <div
-        className={`flex p-2 rounded-tl-2xl text-center overflow-auto opacity-97 border-2 fixed right-0 flex-col transition-all duration-400 ${
+        className={`flex p-2 rounded-tl-2xl text-center overflow-hidden opacity-97 border-2 fixed right-0 flex-col transition-h duration-400 ${
           expanded
-            ? "w-80 h-205 xl:w-115 md:h-500 bg-zinc-300 md:bg-zinc-100"
+            ? "md:w-[30vw]  w-[70vw] max-w-[30rem] h-[100vh] bg-zinc-200 sm:bg-zinc-100"
             : "overflow-hidden w-15 h-25 bg-transparent border-none"
         }`}
       >
@@ -53,15 +62,15 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
             <p className="font-extrabold">O carrinho está vazio.</p>
           ) : (
             <ul>
-              <div className="overflow-y-scroll overflow-x-hidden max-h-110">
+              <div className="overflow-y-scroll xl:overflow-x-hidden overflow-x-scroll max-h-70 2xl:max-h-110">
                 {cart.map((burger) => (
-                  <div className="flex flex-col md:flex-row justify-start items-center gap-2 my-3 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 hover:scale-102 trasition duration-350 ease-in-out">
+                  <div className="flex flex-col md:flex-row justify-start items-center gap-2 2xl:my-2 my-0 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 hover:scale-102 trasition duration-350 ease-in-out">
                     <img
                       className="rounded-sm max-w-40 max-h-40"
                       src={burger.image}
                       alt={burger.name}
                     />
-                    <li className="my-6" key={burger.id}>
+                    <li className="my-5" key={burger.id}>
                       <div>
                         <div className="grow">
                           <div className="flex justify-between font-bold">
@@ -104,29 +113,35 @@ function Cart({ cart, removeFromCart, incrementItem, decreaseItem }) {
                   </div>
                 ))}
               </div>
-              <li className="my-20">
-                {/*faz o calculo do preço dos itens*/}
-                <span className="font-extrabold text-2xl">Total: </span>
-                <span className="font-bold text-2xl">
-                  R${" "}
-                  {cart
-                    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-                    .toFixed(2)}
-                </span>
-              </li>
-              <Link
-                to="/payout/delivery"
-                state={{
-                  cart,
-                  total: cart
-                    .reduce((sum, item) => sum + item.price * item.quantity, 0)
-                    .toFixed(2),
-                }} //passa o carrinho para a próxima página
-                className="bg-green-500 text-amber-50 font-bold text-base xl:text-xl border-2 border-gray-500 hover:bg-emerald-600 p-2 xl:p-5 rounded-xl xl:rounded-3xl transition duration-300 ease-in-out"
-              >
-                Finalizar Pedido
-              </Link>
-              {/*link que leva à página de pagamento*/}
+              <div className="md:absolute relative bottom-10 xl:right-0 2xl:top-166">
+                <li className="2xl:my-20 my-5">
+                  {/*faz o calculo do preço dos itens*/}
+                  <span className="font-extrabold text-2xl">Total: </span>
+                  <span className="font-bold text-2xl">
+                    R${" "}
+                    {cart
+                      .reduce(
+                        (sum, item) => sum + item.price * item.quantity,
+                        0
+                      )
+                      .toFixed(2)}
+                  </span>
+                </li>
+                {/*verifica se a loja está aberta ou fechada*/}
+                <Link
+                  //link que leva à página de pagamento
+                  to="/payout/delivery"
+                  state={{ cart, total }}
+                  onClick={handleLinkClick}
+                  className={`block p-2 md:px-47 rounded-xl md:rounded-none font-bold text-base md:text-xl border-2 border-gray-500 transition duration-300 ease-in-out ${
+                    isOpen
+                      ? "bg-green-500 text-amber-50 hover:bg-emerald-600"
+                      : "bg-gray-400 text-gray-200 cursor-not-allowed"
+                  }`}
+                >
+                  {isOpen ? "Finalizar Pedido" : "Loja Fechada"}
+                </Link>
+              </div>
             </ul>
           )}
         </div>

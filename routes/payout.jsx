@@ -2,6 +2,7 @@ import Step from "../src/payoutSrc/stepper";
 import { ChevronLeft } from "lucide-react";
 import { Outlet, useLocation } from "react-router-dom";
 import PayoutNavigation from "../src/payoutSrc/payoutRoutes";
+import { FormProvider } from "../components/formContext";
 
 function Payout() {
   const location = useLocation();
@@ -41,7 +42,7 @@ function Payout() {
   }));
 
   return (
-    <>
+    <FormProvider>
       <title>Payout</title>
       <div className="flex md:justify-center md:items-center bg-amber-50 md:w-screen h-screen">
         <div className="flex flex-col xl:flex-row md:h-180 shadow-2xl bg-transparent rounded-2xl">
@@ -69,7 +70,7 @@ function Payout() {
           </main>
         </div>
       </div>
-    </>
+    </FormProvider>
   );
 }
 

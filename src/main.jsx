@@ -1,11 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import App from "./App.jsx";
+import App from "../public/App.jsx";
 import Payout from "../routes/payout.jsx";
 
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import DeliveryForm from "../routes/streetForm.jsx";
+import DeliveryForm from "../routes/delivery.jsx";
 import CreditCard from "../routes/creditCard.jsx";
 import Summary from "../routes/summary.jsx";
 import Payment from "../routes/payment.jsx";
