@@ -3,28 +3,27 @@ import React, { createContext, useState } from "react";
 export const FormContext = createContext();
 
 export const FormProvider = ({ children }) => {
-  //estado para armazenar os dados do formulário
   const [formData, setFormData] = useState({
     street: "",
     neiborhood: "",
     complement: "",
     reference: "",
     payment: "",
+    nameCard: "",
+    numCard: "",
+    dateCard: "",
+    cvvCard: "",
   });
 
-  //estado para armazenar os erros do formulário
   const [errors, setErrors] = useState({});
 
-  //atualizar os dados do formulário
   const updateFormData = (newData) => {
     setFormData((prev) => ({ ...prev, ...newData }));
   };
 
-  //função para validar os dados do formulário
   const validateForm = (currentPath) => {
     const newErrors = {};
 
-    //validação para a página "Delivery"
     if (currentPath === "delivery") {
       if (!formData.street) {
         newErrors.street = "Rua é um campo obrigatório";
@@ -37,8 +36,29 @@ export const FormProvider = ({ children }) => {
       }
     }
 
+    if (currentPath === "card-info") {
+      if (!formData.nameCard) {
+        newErrors.nameCard = "Digite o nome do titular do cartão";
+      }
+      if (!formData.numCard) {
+        newErrors.numCard = "Digite o número do cartão";
+      } else if (formData.numCard.replace(/\D/g, "").length !== 16) {
+        newErrors.numCard = "O número do cartão deve ter 16 dígitos";
+      }
+      if (!formData.dateCard) {
+        newErrors.dateCard = "Digite a data de validade (MM/AA)";
+      } else if (!/^\d{2}\/\d{2}$/.test(formData.dateCard)) {
+        newErrors.dateCard = "Formato inválido. Use MM/AA";
+      }
+      if (!formData.cvvCard) {
+        newErrors.cvvCard = "Digite o CVV";
+      } else if (formData.cvvCard.length !== 3) {
+        newErrors.cvvCard = "O CVV deve ter 3 dígitos";
+      }
+    }
+
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0; //retorna true se não houver erros
+    return Object.keys(newErrors).length === 0;
   };
 
   return (

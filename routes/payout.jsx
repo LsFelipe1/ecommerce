@@ -64,7 +64,7 @@ function Payout() {
               />
             ))}
           </div>
-          <main className="flex flex-col md:justify-between bg-zinc-100 w-screen md:w-200 rounded-e-2xl p-5">
+          <main className="flex flex-col md:justify-between z-10 bg-zinc-100 w-screen md:w-200 rounded-e-2xl p-5">
             <Outlet />
             <PayoutNavigation />
           </main>

@@ -1,39 +1,37 @@
+import { useState } from "react";
 import "./App.css";
 import BurgerList from "../burguers/burgerList";
 import Cart from "./cart";
-import React, { useState } from "react";
 import DrinkList from "../burguers/drinkList";
 import IsStoreOpen from "../public/openTime";
+import Notify from "./notify";
+import SearchBar from "../src/payoutSrc/searchFilter";
+import burgers from "../burguers/burger"; // Importe os dados
+import drink from "../burguers/drink";
+import { ShoppingBasket, UserRound } from "lucide-react";
 
-//função de adicionar itens ao carrinho
-const AddOnCart = (burger, setCart) => {
-  //formatação do preço para incluir a vírgula(",")
+// Funções de carrinho
+const AddOnCart = (item, setCart) => {
+  const parsedPrice = parseFloat(item.price.replace(",", ".")); // Converte "10,00" para 10.00
   const formattedItem = {
-    ...burger,
+    ...item,
     quantity: 1,
-    price: parseFloat(burger.price.replace(",", ".")),
-    formattedPrice: `R$${burger.price}`,
+    price: parsedPrice, // Armazena como número
+    formattedPrice: `R$${parsedPrice.toFixed(2).replace(".", ",")}`, // Para exibição
   };
-
-  //adiciona um à quantidade de itens no carrinho, se já houver, é acrescentado mais um
   setCart((prevCart) => {
-    //verifica se o item clicado já está no carrinho por meio do id
-    const existingItem = prevCart.find((item) => item.id === burger.id);
-    //se for verdadeiro, é adicionado mais um no carrinho
+    const existingItem = prevCart.find((cartItem) => cartItem.id === item.id);
     if (existingItem) {
-      return prevCart.map((item) =>
-        item.id === burger.id
-          ? { ...item, quantity: item.quantity + 1 }
-          : //caso não, é adicionado o primeiro
-            item
+      return prevCart.map((cartItem) =>
+        cartItem.id === item.id
+          ? { ...cartItem, quantity: cartItem.quantity + 1 }
+          : cartItem
       );
     }
-    //retorna o carrinho com os novos itens/preço formatado
     return [...prevCart, formattedItem];
   });
 };
 
-//função para adicionar um na quantidade do item no carrinho por meio do botão
 function incrementItem(id, setCart) {
   setCart((prevCart) =>
     prevCart.map((item) =>
@@ -42,12 +40,10 @@ function incrementItem(id, setCart) {
   );
 }
 
-//similar ao de adicionar, porém reduzindo um na quantidade
 function decreaseItem(id, setCart) {
-  setCart((prevCart) => {
-    return prevCart.map((item) => {
+  setCart((prevCart) =>
+    prevCart.map((item) => {
       if (item.id === id) {
-        //validação para não ser possível ir além do 0, caso a quantidade for menor que zero, exibe um alerta e é adicionado mais 1 na quantidade
         if (item.quantity > 0) {
           return { ...item, quantity: item.quantity - 1 };
         } else {
@@ -56,29 +52,69 @@ function decreaseItem(id, setCart) {
         }
       }
       return item;
-    });
-  });
+    })
+  );
 }
 
 function App() {
+  const [expanded, setExpanded] = useState(false);
   const [cart, setCart] = useState([]);
+  const [search, setSearch] = useState(""); // Estado para busca
+  const [discount, setDiscount] = useState(0); // Estado para o desconto
 
-  //"remove" os itens do carrinho por meio de um filtro
+  // Filtra hambúrgueres e bebidas com base no termo de busca
+  const filteredBurgers = burgers.filter((burger) =>
+    burger.name.toLowerCase().includes(search.toLowerCase())
+  );
+  const filteredDrinks = drink.filter((item) =>
+    item.name.toLowerCase().includes(search.toLowerCase())
+  );
+
   const removeFromCart = (id) => {
     setCart((prevCart) => prevCart.filter((item) => item.id !== id));
   };
 
+  const applyDiscount = (discountValue) => {
+    const numericDiscount = Number(discountValue); // Converte para número
+    setDiscount(isNaN(numericDiscount) ? 0 : numericDiscount); // Fallback para 0 se NaN
+  };
+
+  const total = cart
+    .reduce((sum, item) => sum + item.price * item.quantity, 0)
+    .toFixed(2);
+
   return (
     <>
-      <nav>
-        {/*todas as funções do carrinho ficam nessa tag*/}
-        <Cart
-          cart={cart}
-          removeFromCart={removeFromCart}
-          incrementItem={(id) => incrementItem(id, setCart)}
-          decreaseItem={(id) => decreaseItem(id, setCart)}
-        />
+      <nav className="flex justify-between items-center fixed w-screen px-5 bg-zinc-200">
+        <a>Lanches</a>
+        <a>Bebidas</a>
+        <SearchBar search={search} setSearch={setSearch} />
+        <UserRound />
+        <button
+          onClick={() => setExpanded((curr) => !curr)}
+          className="relative cursor-pointer p-2 rounded-xl text-black hover:scale-110 hover:text-emerald-500"
+        >
+          <ShoppingBasket />
+          <Notify cart={cart} />
+          {cart.length > 0 && (
+            <span
+              title={`Total: R$ ${total}`} // Tooltip com o preço total
+              className="absolute -top-2 -right-6 bg-gray-800 text-white text-xs font-bold rounded px-1 py-0.5"
+            ></span>
+          )}
+        </button>
       </nav>
+      <Cart
+        cart={cart}
+        setCart={setCart} // Passa setCart como prop
+        removeFromCart={removeFromCart}
+        incrementItem={(id) => incrementItem(id, setCart)} // Passa setCart para a função
+        decreaseItem={(id) => decreaseItem(id, setCart)} // Passa setCart para a função
+        discount={discount}
+        applyDiscount={applyDiscount}
+        expanded={expanded}
+        setExpanded={setExpanded}
+      />
       <div className="flex justify-center flex-col items-center w-screen h-104 bg-[url(../imagens/bg.png)] text-white">
         <h1 className="font-extrabold my-10 text-xl">Burguer Bonanza</h1>
         <p>Rua das Acácias, 123</p>
@@ -87,18 +123,22 @@ function App() {
       <div className="flex flex-col items-center justify-center w-screen my-10">
         <h1 className="font-bold text-3xl my-4">Conheça nosso menu!</h1>
         <div className="w-screen">
-          {" "}
           <h1 className="font-semibold text-3xl text-center mt-10 mb-2">
             Lanches
           </h1>
-          <BurgerList addToCart={(burger) => AddOnCart(burger, setCart)} />
+          <BurgerList
+            addToCart={(burger) => AddOnCart(burger, setCart)}
+            burgers={filteredBurgers} // Passa dados filtrados
+          />
         </div>
         <div className="w-screen">
-          {" "}
           <h1 className="font-semibold text-3xl text-center mt-10 mb-2">
             Bebidas
           </h1>
-          <DrinkList addToCart={(drink) => AddOnCart(drink, setCart)} />
+          <DrinkList
+            addToCart={(drink) => AddOnCart(drink, setCart)}
+            drinks={filteredDrinks} // Passa dados filtrados
+          />
         </div>
       </div>
     </>

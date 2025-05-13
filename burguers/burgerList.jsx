@@ -1,9 +1,10 @@
 import React from "react";
 import burgers from "./burger";
 import { ShoppingCart } from "lucide-react";
+import SearchBar from "../src/payoutSrc/searchFilter";
 
 //função para exibir os hambúrgues na página através de um array onde os itens são inseridos de forma "automática"
-function BurgerList({ addToCart }) {
+function BurgerList({ addToCart, burgers }) {
   return (
     <div className="grid grid-cols-1 xl:grid-cols-2 md:gap-6 container mx-auto px-4 xs:px-6 sm:px-8">
       {burgers.map((burger /*busca os itens no array*/) => (

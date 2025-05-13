@@ -1,22 +1,18 @@
 import InputForm from "../components/inputlabel";
-import { useState } from "react";
-import { Calendar, Lock } from "lucide-react";
+import { useContext } from "react";
+import { FormContext } from "../components/formContext";
 
-function PaymentForm() {
-  const [cardNumber, setCardNumber] = useState("");
-  const [expirationDate, setExpirationDate] = useState("");
-  const [cvv, setCvv] = useState("");
+function CreditCard() {
+  const { formData, updateFormData, errors } = useContext(FormContext);
 
-  //formata o número do cartão de crédito a cada 4 dígitos
+  // Formata o número do cartão de crédito a cada 4 dígitos
   const formatCardNumber = (value) => {
-    // Remove tudo que não for dígito
-    const digits = value.replace(/\D/g, "").slice(0, 16); // Limita a 16 dígitos
-    // Adiciona espaços a cada 4 dígitos
+    const digits = value.replace(/\D/g, "").slice(0, 16);
     const formatted = digits.replace(/(\d{4})(?=\d)/g, "$1 ").trim();
     return formatted;
   };
 
-  //formata a data de expiração para o formato MM/AA
+  // Formata a data de expiração para o formato MM/AA
   const formatExpirationDate = (value) => {
     const digits = value.replace(/\D/g, "").slice(0, 4);
     if (digits.length > 2) {
@@ -27,48 +23,27 @@ function PaymentForm() {
         return `${month}/${year}`;
       }
       alert("Mês inválido. Por favor, insira um mês entre 01 e 12.");
-      return month; // Não formata se o mês for inválido
+      return month;
     }
     return digits;
   };
 
-  //Atualiza o estado do número do cartão de crédito
+  // Handlers para atualizar o formData
   const handleCardNumberChange = (e) => {
     const formattedValue = formatCardNumber(e.target.value);
-    setCardNumber(formattedValue);
+    updateFormData({ numCard: formattedValue });
+    validateForm("card-info");
   };
 
-  //Atualiza o estado da data de expiração
   const handleExpirationDateChange = (e) => {
     const formattedValue = formatExpirationDate(e.target.value);
-    setExpirationDate(formattedValue);
+    updateFormData({ dateCard: formattedValue });
   };
 
-  //Atualiza o estado do CVV
   const handleCvvChange = (e) => {
     const digits = e.target.value.replace(/\D/g, "").slice(0, 3);
-    setCvv(digits);
+    updateFormData({ cvvCard: digits });
   };
-
-  return {
-    cardNumber,
-    expirationDate,
-    cvv,
-    handleCardNumberChange,
-    handleExpirationDateChange,
-    handleCvvChange,
-  };
-}
-
-function CreditCard() {
-  const {
-    cardNumber,
-    expirationDate,
-    cvv,
-    handleCardNumberChange,
-    handleExpirationDateChange,
-    handleCvvChange,
-  } = PaymentForm();
 
   return (
     <div className="flex flex-col gap-4">
@@ -77,42 +52,48 @@ function CreditCard() {
         <InputForm
           id="nameCard"
           type="text"
-          name="Nome"
+          name="nameCard"
           label="Nome do titular do cartão"
+          value={formData.nameCard}
+          onChange={(e) => updateFormData({ nameCard: e.target.value })}
         />
+        {errors.nameCard && <p className="text-red-500">{errors.nameCard}</p>}
       </div>
       <div>
         <InputForm
           id="numCard"
           type="text"
-          value={cardNumber}
+          value={formData.numCard}
           onChange={handleCardNumberChange}
-          maxlength={19}
-          name="card"
+          maxLength={19}
+          name="numCard"
           label="Número do cartão"
         />
+        {errors.numCard && <p className="text-red-500">{errors.numCard}</p>}
       </div>
       <div className="flex md:flex-row flex-col gap-4">
         <div>
           <InputForm
             id="dateCard"
             type="text"
-            value={expirationDate}
+            value={formData.dateCard}
             onChange={handleExpirationDateChange}
-            name="cardDate"
+            name="dateCard"
             label="Data de validade"
           />
+          {errors.dateCard && <p className="text-red-500">{errors.dateCard}</p>}
         </div>
         <div>
           <InputForm
             id="cvvCard"
-            type="number"
-            maxlength="3"
-            value={cvv}
+            type="text" // Mudei para text para garantir que maxLength funcione
+            maxLength="3"
+            value={formData.cvvCard}
             onChange={handleCvvChange}
-            name="cardCVV"
+            name="cvvCard"
             label="CVV"
           />
+          {errors.cvvCard && <p className="text-red-500">{errors.cvvCard}</p>}
         </div>
       </div>
     </div>

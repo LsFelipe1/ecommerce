@@ -53,7 +53,7 @@ export default function PayoutNavigation() {
 
   //rendereiza o link de navegação
   return (
-    <div className="flex flex-row justify-end gap-5 items-center w-full mt-5 mb-5">
+    <div className="flex flex-row z-50 justify-end gap-5 items-center w-full mt-5 mb-5">
       {previousRoute && (
         <Link
           to={`/payout/${previousRoute}`}
