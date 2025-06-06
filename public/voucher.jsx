@@ -34,14 +34,14 @@ export default function DiscountInput({ applyDiscount }) {
   };
 
   return (
-    <div className="w-full max-w-md mx-auto mt-4">
+    <div className="w-full max-w-md mx-auto my-4">
       <label
         htmlFor="coupon"
         className="block text-sm font-medium text-gray-700"
       >
         Inserir Cupom de Desconto
       </label>
-      <div className="flex gap-2 mt-1">
+      <div className="flex gap-2 2xl:mt-1 mt-0">
         <input
           type="text"
           id="coupon"
@@ -60,7 +60,7 @@ export default function DiscountInput({ applyDiscount }) {
       </div>
       {message && (
         <p
-          className={`mt-2 text-sm ${
+          className={`2xl:mt-2 2xl:mb-0 mb-3 text-sm ${
             message.includes("inválido") ? "text-red-500" : "text-green-500"
           }`}
         >

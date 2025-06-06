@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import "./App.css";
 import BurgerList from "../burguers/burgerList";
 import Cart from "./cart";
@@ -8,7 +8,16 @@ import Notify from "./notify";
 import SearchBar from "../src/payoutSrc/searchFilter";
 import burgers from "../burguers/burger"; // Importe os dados
 import drink from "../burguers/drink";
-import { ShoppingBasket, UserRound } from "lucide-react";
+import {
+  GlassWater,
+  PhoneCall,
+  Pizza,
+  ShoppingBasket,
+  UserRound,
+} from "lucide-react";
+import Footer from "../components/footer";
+import { Link } from "react-router-dom";
+import { AuthContext } from "../backend/authContext";
 
 // Funções de carrinho
 const AddOnCart = (item, setCart) => {
@@ -57,6 +66,8 @@ function decreaseItem(id, setCart) {
 }
 
 function App() {
+  const { user, logout } = useContext(AuthContext); // Obtém user e logout do AuthContext
+  const [isOpenProfile, setIsOpenProfile] = useState(false); // Estado para abrir o perfil do usuário
   const [expanded, setExpanded] = useState(false);
   const [cart, setCart] = useState([]);
   const [search, setSearch] = useState(""); // Estado para busca
@@ -85,24 +96,87 @@ function App() {
 
   return (
     <>
-      <nav className="flex justify-between items-center fixed w-screen px-5 bg-zinc-200">
-        <a>Lanches</a>
-        <a>Bebidas</a>
-        <SearchBar search={search} setSearch={setSearch} />
-        <UserRound />
-        <button
-          onClick={() => setExpanded((curr) => !curr)}
-          className="relative cursor-pointer p-2 rounded-xl text-black hover:scale-110 hover:text-emerald-500"
-        >
-          <ShoppingBasket />
-          <Notify cart={cart} />
-          {cart.length > 0 && (
-            <span
-              title={`Total: R$ ${total}`} // Tooltip com o preço total
-              className="absolute -top-2 -right-6 bg-gray-800 text-white text-xs font-bold rounded px-1 py-0.5"
-            ></span>
+      <nav className="flex justify-between items-center fixed bottom-0 2xl:bottom-[94%] md:bottom-[91%] w-screen py-2 px-7 bg-zinc-100 border-t xl:border-b">
+        <div className="flex flex-row items-center justify-center gap-5">
+          <a
+            href="#burger"
+            className="xl:text-xm xl:font-bold flex flex-col-reverse items-center hover:text-emerald-500 transition-all duration-300"
+          >
+            <span className="xl:text-xm text-sm">Lanches</span>
+            <Pizza className="xl:hidden block" />
+          </a>
+          <a
+            href="#drink"
+            className="xl:text-xm xl:font-bold flex flex-col-reverse items-center hover:text-emerald-500 transition-all duration-300"
+          >
+            <span className="xl:text-xm text-sm">Bebidas</span>
+            <GlassWater className="xl:hidden block" />
+          </a>
+          <a
+            href="#contact"
+            className="xl:text-xm xl:font-bold flex flex-col-reverse items-center hover:text-emerald-500 transition-all duration-300"
+          >
+            <span className="xl:text-xm text-sm">Contato</span>
+            <PhoneCall className="xl:hidden block" />
+          </a>
+        </div>
+        <SearchBar
+          search={search}
+          setSearch={setSearch}
+          burgers={burgers}
+          drinks={drink}
+        />
+        <div className="flex flex-row items-center justify-between w-40">
+          {user ? (
+            <div className="relative">
+              <button
+                onClick={() => setIsOpenProfile((curr) => !curr)}
+                className="flex items-center gap-2"
+              >
+                <UserRound
+                  title="Perfil"
+                  aria-label="Perfil"
+                  className="p-1 rounded-3xl cursor-pointer hover:bg-zinc-200 scale-140 hover:text-emerald-500 hover:scale-160 transition-all duration-500"
+                />
+              </button>
+              {isOpenProfile && (
+                <div className="absolute top-8 right-0 bg-zinc-400 border border-gray-300 rounded-lg shadow-lg p-4 flex flex-col gap-2 z-10">
+                  <p className="text-sm">Olá, {user.name}</p>
+                  <button
+                    onClick={() => {
+                      logout();
+                      setIsOpenProfile(false); // Fecha o dropdown ao fazer logout
+                    }}
+                    className="text-sm text-blue-800 hover:underline cursor-pointer"
+                  >
+                    Sair
+                  </button>
+                </div>
+              )}
+            </div>
+          ) : (
+            <Link to="/SingUp">
+              <UserRound
+                title="Perfil"
+                aria-label="Perfil"
+                className="p-1 rounded-3xl cursor-pointer hover:bg-zinc-200 scale-140 hover:text-emerald-500 hover:scale-160 transition-all duration-500"
+              />
+            </Link>
           )}
-        </button>
+          <button
+            onClick={() => setExpanded((curr) => !curr)}
+            className="relative hover:p-2 hover:bg-zinc-200 cursor-pointer p-2 rounded-xl text-black hover:scale-110 hover:text-emerald-500 transition-all duration-500"
+          >
+            <ShoppingBasket />
+            <Notify cart={cart} />
+            {cart.length > 0 && (
+              <span
+                title={`Total: R$ ${total}`} // Tooltip com o preço total
+                className="absolute -top-2 -right-6 bg-gray-800 text-white text-xs font-bold rounded px-1 py-0.5"
+              ></span>
+            )}
+          </button>
+        </div>{" "}
       </nav>
       <Cart
         cart={cart}
@@ -123,24 +197,34 @@ function App() {
       <div className="flex flex-col items-center justify-center w-screen my-10">
         <h1 className="font-bold text-3xl my-4">Conheça nosso menu!</h1>
         <div className="w-screen">
-          <h1 className="font-semibold text-3xl text-center mt-10 mb-2">
-            Lanches
-          </h1>
-          <BurgerList
-            addToCart={(burger) => AddOnCart(burger, setCart)}
-            burgers={filteredBurgers} // Passa dados filtrados
-          />
+          <section id="burger">
+            <h1 className="font-semibold text-3xl text-center mt-10 mb-2">
+              Lanches
+            </h1>
+            <BurgerList
+              addToCart={(burger) => AddOnCart(burger, setCart)}
+              burgers={filteredBurgers} // Passa dados filtrados
+            />
+          </section>
         </div>
         <div className="w-screen">
-          <h1 className="font-semibold text-3xl text-center mt-10 mb-2">
-            Bebidas
-          </h1>
-          <DrinkList
-            addToCart={(drink) => AddOnCart(drink, setCart)}
-            drinks={filteredDrinks} // Passa dados filtrados
-          />
+          <section id="drink">
+            <h1 className="font-semibold text-3xl text-center mt-10 mb-2">
+              Bebidas
+            </h1>
+            <DrinkList
+              addToCart={(drink) => AddOnCart(drink, setCart)}
+              drinks={filteredDrinks} // Passa dados filtrados
+            />
+          </section>
         </div>
       </div>
+      <section id="contact">
+        <div className="bg-zinc-400 w-screen my-10 h-20 opacity-10"></div>
+        <footer className="w-screen flex justify-center items-center">
+          <Footer />
+        </footer>
+      </section>
     </>
   );
 }

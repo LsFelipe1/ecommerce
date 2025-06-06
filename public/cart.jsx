@@ -52,7 +52,7 @@ function Cart({
   return (
     <>
       <div
-        className={`fixed right-0 top-14 flex flex-col bg-white shadow-lg w-[340px] xl:w-[500px] h-screen transition-all duration-300 ${
+        className={`fixed right-0 2xl:top-[55px] top-[8%] flex flex-col bg-white shadow-lg w-[340px] xl:w-[500px] h-screen transition-all duration-300 ${
           expanded ? "translate-x-0" : "translate-x-full"
         }`}
       >
@@ -71,13 +71,13 @@ function Cart({
         <div className="flex-1 overflow-y-auto p-4">
           {cart.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full text-center text-gray-500">
-              <Frown size={40} />
+              <Frown size={40} className="text-red-500" />
               <p className="mt-4 text-sm">Seu carrinho está vazio.</p>
               <p className="text-xs">Adicione itens para continuar.</p>
             </div>
           ) : (
             <ul>
-              <div className="overflow-y-scroll xl:overflow-x-hidden overflow-x-scroll max-h-70 2xl:max-h-90">
+              <div className="overflow-y-scroll xl:overflow-x-hidden overflow-x-scroll max-h-40 2xl:max-h-90">
                 {cart.map((burger) => (
                   <div className="flex flex-col md:flex-row justify-start items-center gap-2 2xl:my-1 my-0 bg-white shadow-md p-2 rounded-xl max-h-100 hover:bg-fuchsia-100 hover:scale-102 trasition duration-350 ease-in-out">
                     <img
@@ -129,10 +129,10 @@ function Cart({
                 ))}
               </div>
               <div className="md:absolute relative bottom-10 xl:right-0 xl:w-125 bg-zinc-100 border-t 2xl:top-112">
-                <li className="2xl:my-6 my-5 flex flex-col justify-between gap-2 bg-zinc-200 shadow-md p-2 rounded-xl">
+                <li className="2xl:my-6 my-3 flex flex-col justify-between gap-2 bg-zinc-200 shadow-md p-2 rounded-xl">
                   <div className="flex justify-between">
-                    <span className="font-extrabold text-2xl">Itens: </span>
-                    <span className="font-bold text-xl">
+                    <span className="font-extrabold 2xl:text-2xl">Itens: </span>
+                    <span className="font-bold 2xl:text-xl">
                       {cart.reduce((sum, item) => sum + item.quantity, 0)}
                     </span>
                   </div>
@@ -146,8 +146,8 @@ function Cart({
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="font-extrabold text-2xl">Frete: </span>
-                    <span className="font-bold text-xl">R$ 5,00</span>
+                    <span className="font-extrabold 2xl:text-2xl">Frete: </span>
+                    <span className="font-bold 2xl:text-xl">R$ 5,00</span>
                   </div>
                   <div>
                     {discount > 0 && (
@@ -159,8 +159,8 @@ function Cart({
                   </div>
                   <div className="flex justify-between">
                     {/*faz o calculo do preço dos itens*/}
-                    <span className="font-extrabold text-2xl">Total: </span>
-                    <span className="font-bold text-xl">
+                    <span className="font-extrabold 2xl:text-2xl">Total: </span>
+                    <span className="font-bold 2xl:text-xl">
                       R${discountedTotal.toFixed(2)} {/* Inclui frete */}{" "}
                     </span>
                   </div>

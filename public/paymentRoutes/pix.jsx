@@ -23,12 +23,12 @@ function PixPayment() {
           ></img>
           <div className="flex flex-col justify-center items-center gap-10">
             <Timer />
-            <p
+            <span
               className="font-bold text-3xl bg-emerald-400 p-3 px-21 flex justify-between border-0 rounded-xl shadow-green-200 shadow-xl border-black"
               title="Total"
             >
               R$ {discountedTotal}
-            </p>
+            </span>
             <button className="bg-emerald-400 border-2 p-2 hover:cursor-pointer rounded-xl shadow-green-200 shadow-xl border-black">
               Confirmar pagamento
             </button>
