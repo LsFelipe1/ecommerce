@@ -10,6 +10,7 @@ import burgers from "../burguers/burger"; // Importe os dados
 import drink from "../burguers/drink";
 import {
   GlassWater,
+  LogOut,
   PhoneCall,
   Pizza,
   ShoppingBasket,
@@ -51,20 +52,16 @@ function incrementItem(id, setCart) {
 
 function decreaseItem(id, setCart) {
   setCart((prevCart) =>
-    prevCart.map((item) => {
-      if (item.id === id) {
-        if (item.quantity > 0) {
+    prevCart
+      .map((item) => {
+        if (item.id === id && item.quantity > 0) {
           return { ...item, quantity: item.quantity - 1 };
-        } else {
-          alert("Não é possível subtrair de zero!");
-          return { ...item, quantity: item.quantity + 1 };
         }
-      }
-      return item;
-    })
+        return item;
+      })
+      .filter((item) => item.quantity > 0)
   );
 }
-
 function App() {
   const { user, logout } = useContext(AuthContext); // Obtém user e logout do AuthContext
   const [isOpenProfile, setIsOpenProfile] = useState(false); // Estado para abrir o perfil do usuário
@@ -96,7 +93,7 @@ function App() {
 
   return (
     <>
-      <nav className="flex justify-between items-center fixed bottom-0 2xl:bottom-[94%] md:bottom-[91%] w-screen py-2 px-7 bg-zinc-100 border-t xl:border-b">
+      <nav className="flex justify-between items-center fixed bottom-0 2xl:bottom-[94%] md:bottom-[93%] w-screen py-2 px-7 bg-zinc-100 border-t xl:border-b">
         <div className="flex flex-row items-center justify-center gap-5">
           <a
             href="#burger"
@@ -140,16 +137,23 @@ function App() {
                 />
               </button>
               {isOpenProfile && (
-                <div className="absolute top-8 right-0 bg-zinc-400 border border-gray-300 rounded-lg shadow-lg p-4 flex flex-col gap-2 z-10">
-                  <p className="text-sm">Olá, {user.name}</p>
+                <div className="absolute md:top-8 top-[-10rem] right-0 bg-zinc-200 border border-gray-300 rounded-lg shadow-2xl py-4 w-[160px] text-center flex flex-col z-10">
+                  <p className="text-sm py-2">Olá, {user.name}!</p>
+                  <Link
+                    to="/Profile"
+                    onClick={() => setIsOpenProfile(false)} // Fecha o dropdown ao clicar no perfil
+                    className="text-sm hover:bg-zinc-300 border-t-1 py-2 cursor-pointer"
+                  >
+                    Perfil
+                  </Link>
                   <button
                     onClick={() => {
                       logout();
                       setIsOpenProfile(false); // Fecha o dropdown ao fazer logout
                     }}
-                    className="text-sm text-blue-800 hover:underline cursor-pointer"
+                    className="text-sm justify-center flex gap-1 hover:bg-zinc-300 border-t-1 text-red-600 border-black py-2 cursor-pointer"
                   >
-                    Sair
+                    <LogOut size={20} /> Sair
                   </button>
                 </div>
               )}

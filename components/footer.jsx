@@ -30,10 +30,13 @@ export default function Footer() {
         <div>
           <h3 className="text-lg font-bold">Conecte-se</h3>
           <div className="flex gap-4">
-            <a href="https://instagram.com" target="_blank">
+            <a
+              href="https://linkedin.com/in/felipe-torres-703326360/"
+              target="_blank"
+            >
               <Linkedin />
             </a>
-            <a href="https://x.com" target="_blank">
+            <a href="https://https://github.com/LsFelipe1" target="_blank">
               <Github />
             </a>
           </div>
